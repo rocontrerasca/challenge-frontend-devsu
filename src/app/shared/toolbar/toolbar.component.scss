@@ -1,0 +1,5 @@
+.toolbar{display:flex;justify-content:space-between;align-items:center;padding:10px 0;}
+.brand{font-weight:700;font-size:1.1rem;}
+.nav{display:flex;gap:12px;}
+.nav a{ text-decoration:none; padding:6px 10px; border-radius:8px; border:1px solid #d1d5db;}
+.nav a.active{ background:#2563eb;color:#fff;border-color:#2563eb;}

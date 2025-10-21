@@ -1,0 +1,93 @@
+<div class="card">
+  <h2>Movimientos</h2>
+
+  <!-- Form crear movimiento -->
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form">
+    <div class="field field--6">
+      <label>Cliente</label>
+      <select class="input" formControlName="clientRefId" (change)="onClientChange($any($event.target).value)">
+        <option value="" disabled>Seleccione un cliente</option>
+        <option *ngFor="let c of clients()" [value]="c.clientId">{{ c.fullName }}</option>
+      </select>
+    </div>
+
+    <div class="field field--6">
+      <label>Cuenta</label>
+      <select class="input" formControlName="accountRefId">
+        <option value="" disabled>Seleccione una cuenta</option>
+        <option *ngFor="let a of accounts()" [value]="a.accountId">
+          {{ a.accountNumber }} — {{ a.accountType === 1 ? 'Ahorros' : 'Corriente' }}
+        </option>
+      </select>
+    </div>
+
+    <div class="field field--3">
+      <label>Tipo de movimiento</label>
+      <select class="input" formControlName="moveType">
+        <option [ngValue]="1">Crédito</option>
+        <option [ngValue]="2">Débito</option>
+      </select>
+    </div>
+
+    <div class="field field--3">
+      <label>Monto</label>
+      <input class="input" type="number" min="0.01" step="0.01" formControlName="amount" />
+      <div class="help" *ngIf="submitted && form.controls.amount.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="row-nowrap" style="margin-top:8px;">
+      <button class="btn nowrap" type="submit">Crear movimiento</button>
+      <span class="spacer"></span>
+      <span class="muted" *ngIf="loading()">Procesando…</span>
+    </div>
+  </form>
+</div>
+
+<!-- Listado SIEMPRE de TODOS los movimientos (GET /move) -->
+<div class="card">
+  <div class="row" style="margin-bottom: 10px;">
+    <h3 style="margin:0;">Listado movimientos</h3>
+    <span class="spacer"></span>
+    <input #q class="input" style="max-width:320px" type="search"
+      placeholder="Buscar por ccliente, monto, cuenta" [value]="searchTerm()" (input)="onSearchInput(q.value)"
+      (keyup.enter)="onSearchInput(q.value)" />
+    <button class="btn secondary" (click)="refreshList()" [disabled]="loading()">Refrescar</button>
+  </div>
+
+  <div class="table-wrap" *ngIf="filtered().length; else emptyState">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Tipo</th>
+          <th>Monto</th>
+          <th>Saldo</th>
+          <th>Cuenta</th>
+          <th>Cliente</th>
+          <th>Éxito</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let m of filtered()">
+          <td>{{ m.transactionDate | date:'yyyy-MM-dd HH:mm' }}</td>
+          <td>{{ typeLabel(m.moveType) }}</td>
+          <td>{{ m.amount | number:'1.2-2' }}</td>
+          <td>{{ m.balance | number:'1.2-2' }}</td>
+          <td>{{ m.account?.accountNumber }}</td>
+          <td>{{ clientNameById(m.account?.clientRefId || '') || '—' }}</td>
+          <td>
+            <span class="badge" [class.ok]="m.success" [class.off]="!m.success">
+              {{ m.success ? 'Sí' : 'No' }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #emptyState>
+    <div class="muted">No hay movimientos.</div>
+  </ng-template>
+</div>

@@ -24,4 +24,9 @@ export class MoveService {
     const body = { startDate: startDateISO, endDate: endDateISO, clientId };
     return this.http.post<ApiResponse<MoveReportRow[]>>(`${this.base}/report`, body )
   }
+
+  reportPdf(startDateISO: string, endDateISO: string, clientId: string) {
+    const body = { startDate: startDateISO, endDate: endDateISO, clientId };
+    return this.http.post<ApiResponse<any>>(`${this.base}/report/pdf`, body )
+  }
 }

@@ -33,7 +33,10 @@
 
 <div class="card">
   <h3>Resultados</h3>
-
+  <div class="row" style="gap:8px; margin-bottom:10px;">
+    <button class="btn secondary" type="button" (click)="exportJson()">Exportar JSON</button>
+    <button class="btn" type="button" (click)="exportPdfBase64()">Exportar PDF (Base64)</button>
+  </div>
   <div class="table-wrap" *ngIf="rows().length; else empty">
     <table class="table">
       <thead>

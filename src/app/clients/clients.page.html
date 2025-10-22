@@ -1,0 +1,135 @@
+<div class="card">
+  <h2>Clientes</h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="form" style="margin-top:8px;">
+    <div class="field field--6">
+      <label>Nombre completo</label>
+      <input class="input" formControlName="fullName" placeholder="" />
+      <div class="help" *ngIf="submitted && form.controls.fullName.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="field field--3">
+      <label>Género</label>
+      <select class="input" formControlName="gender">
+        <option value="F">Femenino</option>
+        <option value="M">Masculino</option>
+      </select>
+      <div class="help" *ngIf="submitted && form.controls.gender.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="field field--3">
+      <label>Edad</label>
+      <input class="input" type="number" min="1" max="120" formControlName="age" />
+      <div class="help" *ngIf="submitted && form.controls.age.invalid">
+        Edad inválida
+      </div>
+    </div>
+
+    <div class="field field--6">
+      <label>N° Identificación</label>
+      <input class="input" formControlName="identificationNumber" placeholder="" />
+      <div class="help" *ngIf="submitted && form.controls.identificationNumber.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="field field--3">
+      <label>Dirección</label>
+      <input class="input" formControlName="address" placeholder="" />
+      <div class="help" *ngIf="submitted && form.controls.address.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="field field--3">
+      <label>Teléfono</label>
+      <input class="input" formControlName="phoneNumber" placeholder="" />
+      <div class="help" *ngIf="submitted && form.controls.phoneNumber.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="field field--6">
+      <label>Contraseña</label>
+      <input class="input" type="password" formControlName="password" placeholder="" />
+      <div class="help" *ngIf="submitted && form.controls.password.invalid">
+        Requerida
+      </div>
+    </div>
+
+    <div class="field field--3">
+      <label>Estado</label>
+      <select class="input" formControlName="active">
+        <option [ngValue]="true">Activo</option>
+        <option [ngValue]="false">Inactivo</option>
+      </select>
+      <div class="help" *ngIf="submitted && form.controls.active.invalid">
+        Requerido
+      </div>
+    </div>
+
+    <div class="row-nowrap" style="margin-top:30px; justify-content:flex-end;">
+      <button class="btn nowrap" type="submit">{{ editId ? 'Actualizar' : 'Crear' }}</button>
+      <button type="button" class="btn secondary nowrap" (click)="reset()">Limpiar</button>
+      <span class="spacer"></span>
+      <span class="muted" *ngIf="loading()">Procesando…</span>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <div class="row" style="margin-bottom: 10px;">
+    <h3 style="margin:0;">Listado</h3>
+    <span class="spacer"></span>
+    <input #q class="input" style="max-width:320px" type="search"
+      placeholder="Buscar por nombre, identificación o teléfono" [value]="searchTerm()" (input)="onSearchInput(q.value)"
+      (keyup.enter)="onSearchInput(q.value)" />
+    <button class="btn ghost" (click)="searchTerm.set(''); reload()">Limpiar filtro</button>
+  </div>
+
+  <div class="table-wrap" *ngIf="filtered().length; else empty">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Género</th>
+          <th>Edad</th>
+          <th>Identificación</th>
+          <th>Dirección</th>
+          <th>Teléfono</th>
+          <th>Estado</th>
+          <th style="width:180px">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filtered()">
+          <td style="font-weight:600">{{ c.fullName }}</td>
+          <td>{{ c.gender }}</td>
+          <td>{{ c.age }}</td>
+          <td>{{ c.identificationNumber }}</td>
+          <td>{{ c.address }}</td>
+          <td>{{ c.phoneNumber }}</td>
+          <td>
+            <span class="badge" [class.ok]="c.active" [class.off]="!c.active">
+              {{ c.active ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td style="width:180px;">
+            <div class="actions-inline">
+              <button class="btn secondary nowrap" (click)="edit(c)">Editar</button>
+              <button class="btn danger nowrap" (click)="remove(c)">Eliminar</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #empty>
+    <div class="muted">Sin resultados.</div>
+  </ng-template>
+</div>

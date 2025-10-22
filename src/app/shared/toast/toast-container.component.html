@@ -1,0 +1,6 @@
+<div class="toast-wrap">
+  <div *ngFor="let t of toasts()" class="toast" [ngClass]="t.type" (click)="dismiss(t.id)">
+    <div class="dot"></div>
+    <div class="msg">{{ t.message }}</div>
+  </div>
+</div>
